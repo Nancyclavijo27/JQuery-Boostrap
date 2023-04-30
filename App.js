@@ -25,25 +25,49 @@ $(document).ready(function () {
         var deleteButton = $('<button>').addClass('btn btn-danger delete-btn').text('Delete').data('id', user.id);
         listItem.append(name, avatar, empresa, createdAt, descripcion, editButton, deleteButton);
         userList.append(listItem);
+        deleteButton.click(function() {
+          const id = $(this).data('id');
+          $.ajax({
+            url: urlAPI + '/' + id,
+            method: 'DELETE',
+            success: function(result) {
+              console.log("Data deleted successfully");
+              // remove the list item from the DOM
+              listItem.remove();
+            },
+            error: function(error) {
+              console.error('There was a problem with the delete operation:', error);
+            }
       });
-      
     });
+    });
+
+  });
   
     // POST request
-$('#createBtn').click(() => {
-  const formData = new FormData($('#myForm')[0]);
-  const data = {
-      name: formData.get('name'),
-      empresa: formData.get('empresa'),
-      descripcion: formData.get('descripcion')
-  };
-  $.post(urlAPI, data, function(response) {
-      console.log(response);
-  })
-  .fail(function(error) {
-      console.error('There was a problem with the post operation:', error);
-  });
-});
+
+    
+      $("form").submit(function(e) {
+         //Prevent submission of the form
+         e.preventDefault();
+         
+         //Send AJAX POST request to server
+         $.ajax({
+            type: "POST",
+            url: "/some-url",
+            data: $(this).serialize(),
+            success: function(response) {
+               //Update user-list element with the new data received
+               $("#user-list").html(response);
+               
+               //Clear form values
+               $("#myForm")[0].reset();
+            }
+         });
+      });
+   
+    
+
 
 // PUT request
 $('#editBtn').click(() => {
@@ -75,4 +99,9 @@ $('#editBtn').click(() => {
 });
 
 
-  });
+ 
+});
+
+
+  
+  
