@@ -28,14 +28,25 @@
       </div>
       <div class="col-md-6">
         <div class="bg-dark text-white mt-5 p-2">
-          <form>
-            <div class="mb-3">
-              <input type="text" class="form-control" id="nombre" placeholder="Escribe tu nombre" autocomplete="off">
+           <form id="myForm">
+            <div class="form-group">
+              <label for="id">ID:</label>
+              <input type="hidden" class="form-control" id="id" name="id" required>
             </div>
-            <button class="btn btn-primary">Crear</button>
-            <button class="btn btn-danger">Quitar</button>
-            <button class="btn btn-warning">Alternar</button>
-            <button class="btn btn-success">Editar</button>
+            <div class="form-group">
+              <label for="name">Name:</label>
+              <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="empresa">Empresa:</label>
+              <input type="text" class="form-control" id="empresa" name="empresa" required>
+            </div>
+            <div class="form-group">
+              <label for="descripcion">Descripción:</label>
+              <input type="text" class="form-control" id="descripcion" name="descripcion" required>
+            </div>
+            <button type="button" class="btn btn-primary" id="createBtn">Crear</button>
+            <button type="button" class="btn btn-danger" id="editBtn">Editar</button>
           </form>
         </div>
       </div>

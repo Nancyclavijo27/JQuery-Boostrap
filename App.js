@@ -1,7 +1,7 @@
 
 $(document).ready(function () {
     var urlAPI='https://644d62d2cfdddac970a39eb9.mockapi.io/name';
-
+    
     // Obtener los datos de los usuarios
     $.get(urlAPI, function(data) {
       // Crear elementos de la lista para los usuarios
@@ -13,72 +13,66 @@ $(document).ready(function () {
         var empresa = $('<p>').text(user.empresa);
         var createdAt = $('<small>').text(user.createdAt);
         var descripcion = $('<p>').text(user.descripcion);
-        listItem.append(name, avatar, empresa, createdAt);
+        var editButton = $('<button>').addClass('btn btn-primary').text('Edit').click(function() {
+          $('#name').val(user.name);
+          $('#empresa').val(user.empresa);
+          $('#descripcion').val(user.descripcion);
+          $('#id').val(user.id);
+          // hide the create button and show the edit button
+          $('#createBtn').hide();
+          $('#editBtn').show();
+        });
+        var deleteButton = $('<button>').addClass('btn btn-danger delete-btn').text('Delete').data('id', user.id);
+        listItem.append(name, avatar, empresa, createdAt, descripcion, editButton, deleteButton);
         userList.append(listItem);
       });
-
       
-
-      $.ajax({
-        url:urlAPI + "/"+ 1, // replace with the appropriate URL for your API
-        method: 'PUT',
-        data: { name: 'New Name' },
-        success: function(response) {
-          console.log(response);
-        },
-        error: function(xhr, status, error) {
-          console.log(error);
-        }
-      });
     });
   
+    // POST request
+$('#createBtn').click(() => {
+  const formData = new FormData($('#myForm')[0]);
+  const data = {
+      name: formData.get('name'),
+      empresa: formData.get('empresa'),
+      descripcion: formData.get('descripcion')
+  };
+  $.post(urlAPI, data, function(response) {
+      console.log(response);
+  })
+  .fail(function(error) {
+      console.error('There was a problem with the post operation:', error);
+  });
+});
+
+// PUT request
+$('#editBtn').click(() => {
+  const formData = new FormData($('#myForm')[0]);
+  const data = {
+    name: formData.get('name'),
+    empresa: formData.get('empresa'),
+    descripcion: formData.get('descripcion')
+  };
+  const id = formData.get('id');
+  if (id) {
     $.ajax({
-        url:urlAPI,
-        type: 'POST',
-        data: { name: 'John', email: 'john@example.com' },
-        success: function(response) {
-          console.log(response);
-        },
-        error: function(xhr, status, error) {
-          console.log(error);
-        }
-      });
-
-  
-
-    //$("#my-button").on("click", function(){
-       // dataEjemplo= {
-       //     name:"Nancy "//por lo que vamos a cambiar
-       // }
-
-        //$.ajax({
-        //    type: "PUT",
-        //    url:urlAPI + "/"+ 1,
-        //    contentType:"application/json",
-         //   data: JSON.stringify(dataEjemplo)
-       // })
-       // .done(function(data){
-      //      console.log("respuesta >", data)
-      //  })
-      //  .fail(function(error){
-       //     console.log("respuesta >", error)
-       // });
+      url: urlAPI + '/' + id,
+      method: 'PUT',
+      contentType: 'application/json',
+      data: JSON.stringify(data),
+      success: function(result) {
+        console.log("Data updated successfully");
+        // reset the form and show the create button
+        $('#myForm')[0].reset();
+      },
+      error: function(error) {
+        console.error('There was a problem with the put operation:', error);
+      }
+    });
+  } else {
+    console.error('ID parameter is null or undefined, cannot update data');
+  }
+});
 
 
-
-    //});
-
-    //$("#my-button").on("click", function(){
-    //    dataEjemplo= {
-     //   name:"Carlos"//por lo que vamos a cambiar
-     //    } 
-
-     //    $.post(urlAPI,
-     //       dataEjemplo,
-     //       function(data){
-      //          console.log("respuesta [create] >", data)
-      //      }
-      //      )
-   // })
- 
   });
